@@ -1,13 +1,13 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "zennbtedit",
+  "name": "Zen Nbt Util",
+  "description": "Zen Nbt Util mod.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["CleanroomMC"],
+  "authorList": ["xenfork"],
   "credits": "Authors of this project",
   "logoFile": "",
   "screenshots": [],
