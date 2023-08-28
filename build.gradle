@@ -23,7 +23,7 @@ java {
     }
     // Generate sources and javadocs jars when building and publishing
     withSourcesJar()
-    // withJavadocJar()
+    withJavadocJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -33,6 +33,7 @@ tasks.withType(JavaCompile).configureEach {
 configurations {
     embed
     implementation.extendsFrom(embed)
+	generatorImplementation.extendsFrom(implementation)
 }
 
 minecraft {
@@ -68,12 +69,13 @@ minecraft {
     // Example:
     // injectedTags.put('VERSION', project.version)
     // injectedTags.put('MOD_ID', project.archives_base_name)
+	injectedTags.put("VERSION", project.version)
 }
 
 // Generate a group.archives_base_name.Tags class
 tasks.injectTags.configure {
     // Change Tags class' name here:
-    outputClassName.set("${project.group}.${project.archives_base_name}.Tags")
+    outputClassName.set("${project.group}.Tags")
 }
 
 repositories {
@@ -128,6 +130,28 @@ dependencies {
 
 }
 
+def mixinConfigRefMap = 'mixins.' + project.archives_base_name + '.refmap.json'
+def mixinTmpDir = buildDir.path + File.separator + 'tmp' + File.separator + 'mixins'
+def refMap = "${mixinTmpDir}" + File.separator + mixinConfigRefMap
+def mixinSrg = "${mixinTmpDir}" + File.separator + "mixins.srg"
+
+if (project.use_mixins.toBoolean()) {
+    tasks.named("reobfJar", ReobfuscatedJar).configure {
+        extraSrgFiles.from(mixinSrg)
+    }
+
+    tasks.named("compileJava", JavaCompile).configure {
+        doFirst {
+            new File(mixinTmpDir).mkdirs()
+        }
+        options.compilerArgs += [
+                "-AreobfSrgFile=${tasks.reobfJar.srg.get().asFile}",
+                "-AoutSrgFile=${mixinSrg}",
+                "-AoutRefMapFile=${refMap}",
+        ]
+    }
+}
+
 // Adds Access Transformer files to tasks
 if (project.use_access_transformer.toBoolean()) {
     for (File at : sourceSets.getByName("main").resources.files) {
@@ -151,9 +175,15 @@ processResources {
                 'mcversion': project.minecraft.version
         )
     }
-    
+	
     if (project.use_access_transformer.toBoolean()) {
         rename '(.+_at.cfg)', 'META-INF/$1' // Make sure Access Transformer files are in META-INF folder
+    }
+	
+	if (project.use_mixins.toBoolean()) {
+        // Embed mixin refmap
+        from refMap
+        dependsOn("compileJava")
     }
 }
 
@@ -173,6 +203,7 @@ jar {
         attributes(attribute_map)
     }
     // Add all embedded dependencies into the jar
+	setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     from(provider{ configurations.embed.collect {it.isDirectory() ? it : zipTree(it)} })
 }
 
@@ -210,4 +241,17 @@ idea {
 
 tasks.named("processIdeaSettings").configure {
     dependsOn("injectTags")
+}
+
+sourceSets {
+	generator {
+        java {
+            srcDir 'src/generator/java'
+        }
+    }
+    api {
+        java {
+            srcDir 'src/api/java'
+        }
+    }
 }
