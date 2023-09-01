@@ -1,10 +1,10 @@
-package io.github.xenfork.zennbtedit;
+package io.github.xenfork.zennbtedit.impl;
 
 import crafttweaker.annotations.ZenRegister;
 import net.minecraft.nbt.NBTBase;
 import stanhebben.zenscript.annotations.ZenClass;
 
-@ZenClass("mods.zen.nbt.edit.base")
+@ZenClass("mods.zennbtedit.Base")
 @ZenRegister
-public abstract class IBase extends NBTBase {
+public abstract class Base extends NBTBase {
 }

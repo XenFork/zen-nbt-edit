@@ -1,19 +1,17 @@
-package io.github.xenfork.zennbtedit;
+package io.github.xenfork.zennbtedit.impl;
 
 import crafttweaker.annotations.ZenRegister;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.Nullable;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenGetter;
-import stanhebben.zenscript.annotations.ZenMethod;
-import stanhebben.zenscript.annotations.ZenSetter;
+import stanhebben.zenscript.annotations.*;
 
 import java.util.Arrays;
 import java.util.UUID;
 
-@ZenClass("mods.zen.nbt.util.nbt")
-@ZenRegister()
+@SuppressWarnings("unused")
+@ZenClass("mods.zennbtedit.Nbt")
+@ZenRegister
 public class INBT extends NBTTagCompound {
     @ZenMethod("info")
     public void info(String message) {
@@ -32,7 +30,7 @@ public class INBT extends NBTTagCompound {
     public String[] keySet() {
         return getKeySet().toArray(new String[0]);
     }
-    @ZenMethod("getKeyTag")
+    @ZenGetter("keyTag")
     public String[] getKeyTag() {
         String[] strings = Arrays.copyOf(keySet(), keySet().length);
         for (int i = 0; i < strings.length; i++) {
@@ -61,12 +59,12 @@ public class INBT extends NBTTagCompound {
         return this.getString(key);
     }
     @ZenMethod("tag")
-    public void setTag(String key, IBase base) {
+    public void setTag(String key, Base base) {
         setTag(key, (NBTBase) base);
     }
     @ZenGetter("tag")
-    public IBase tag(String key) {
-        return (IBase) getTag(key);
+    public Base tag(String key) {
+        return (Base) getTag(key);
     }
 
     @ZenMethod("setByte")
@@ -148,5 +146,48 @@ public class INBT extends NBTTagCompound {
     @ZenGetter("asDouble")
     public double double_(String key) {
         return super.getDouble(key);
+    }
+
+    @ZenMethod("byteArray")
+    public void byteArray(String key, byte[] value) {
+        super.setByteArray(key, value);
+    }
+
+    @ZenGetter("byteArray")
+    public byte[] byteArray(String key) {
+        return super.getByteArray(key);
+    }
+
+    @ZenMethod("byteArray")
+    public void intArray(String key, int[] value) {
+        super.setIntArray(key, value);
+    }
+
+    @ZenGetter("byteArray")
+    public int[] intArray(String key) {
+        return super.getIntArray(key);
+    }
+
+    @ZenGetter("nbt")
+    public INBT nbt(String key) {
+        return (INBT) super.getCompoundTag(key);
+    }
+    @ZenMethod("remove")
+
+    public void remove(String key) {
+        super.removeTag(key);
+    }
+    @ZenGetter("copy")
+    public INBT copy_() {
+        return (INBT) super.copy();
+    }
+    @ZenOperator(value = OperatorType.EQUALS)
+    public boolean is(Object o) {
+        return super.equals(o);
+    }
+
+    @ZenOperator(OperatorType.ADD)
+    public void merge_(INBT other) {
+        super.merge(other);
     }
 }
