@@ -2,7 +2,7 @@
   "package": "io.github.xenfork.zennbtedit.mixin",
   "refmap": "mixins.zennbtedit.remap.json",
   "target": "@env(DEFAULT)",
-  "mixinVersion": "0.8",
+  "minVersion": "0.8",
   "compatibilityLevel": "JAVA_8",
   "client": [
   ],
