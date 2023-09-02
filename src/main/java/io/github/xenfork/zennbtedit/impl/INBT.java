@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-@ZenClass("mods.zennbtedit.Nbt")
+@ZenClass("mods.zennbtedit.nbt")
 @ZenRegister
 public class INBT extends NBTTagCompound {
     @ZenMethod("info")

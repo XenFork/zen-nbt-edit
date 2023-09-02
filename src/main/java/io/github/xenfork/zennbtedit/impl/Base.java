@@ -4,7 +4,7 @@ import crafttweaker.annotations.ZenRegister;
 import net.minecraft.nbt.NBTBase;
 import stanhebben.zenscript.annotations.ZenClass;
 
-@ZenClass("mods.zennbtedit.Base")
+@ZenClass("mods.zennbtedit.base")
 @ZenRegister
 public abstract class Base extends NBTBase {
 }
